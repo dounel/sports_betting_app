@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Enable CORS pou tout orijin
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     });
     
   } catch (error) {
-    console.error('Error fetching matches:', error);
+    console.error('Error:', error);
     res.status(500).json({ 
       error: 'Failed to fetch matches',
       matches: [],
