@@ -1,60 +1,50 @@
 module.exports = async (req, res) => {
-  // Enable CORS pou tout orijin
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Si se yon preflight request (OPTIONS), reponn imedyatman
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
-  // Sèlman aksepte GET
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
 
-  const { type, limit } = req.query;
-  
-  // API Key football-data.org
+  const { type } = req.query;
   const API_KEY = process.env.FOOTBALL_API_KEY || '396b03798bb52ede1863990b1fe633b3';
   
-  // Konstrwi URL API a
-  let status = 'SCHEDULED,LIVE,FINISHED';
-  if (type === 'live') {
-    status = 'LIVE,IN_PLAY';
-  }
-  
-  const apiUrl = `https://api.football-data.org/v4/matches?status=${status}&limit=${limit || 50}`;
+  // Sèvi ak dat jodi a
+  const today = new Date().toISOString().split('T')[0];
+  const apiUrl = `https://api.football-data.org/v4/matches?dateFrom=${today}&dateTo=${today}`;
 
   try {
     const response = await fetch(apiUrl, {
-      headers: {
-        'X-Auth-Token': API_KEY,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'X-Auth-Token': API_KEY },
     });
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    let matches = data.matches || [];
     
-    // Retounen match yo
-    res.status(200).json({
-      matches: data.matches || [],
-      count: data.matches?.length || 0,
-    });
+    // Filtre pa tip (live oswa tout)
+    if (type === 'live') {
+      matches = matches.filter(m => m.status === 'LIVE' || m.status === 'IN_PLAY');
+    }
     
+    // Limite kantite match
+    matches = matches.slice(0, 50);
+    
+    res.status(200).json({ matches, count: matches.length });
   } catch (error) {
-    console.error('Error:', error);
     res.status(200).json({ 
       error: error.message,
-      errorDetail: error.toString(),
-      apiKey: API_KEY.substring(0, 5) + '...',
       matches: [],
       count: 0 
     });
