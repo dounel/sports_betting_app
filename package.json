@@ -1,0 +1,11 @@
+{
+  "name": "sports-betting-api",
+  "version": "1.0.0",
+  "description": "Proxy API pou football-data.org",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
