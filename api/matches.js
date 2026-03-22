@@ -51,8 +51,10 @@ module.exports = async (req, res) => {
     
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ 
-      error: 'Failed to fetch matches',
+    res.status(200).json({ 
+      error: error.message,
+      errorDetail: error.toString(),
+      apiKey: API_KEY.substring(0, 5) + '...',
       matches: [],
       count: 0 
     });
