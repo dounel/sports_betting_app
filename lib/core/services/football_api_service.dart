@@ -9,7 +9,7 @@ class FootballApiService {
   // URL Vercel proxy - RANPLASE AK URL OU A apre deploy
   static const String _vercelProxyUrl = 'https://sports-betting-app-cexq.vercel.app';
   static const String _baseUrl = 'https://api.football-data.org/v4';
-  static const String _apiKey = '396b03798bb52ede1863990b1fe633b3';
+  static const String _apiKey = '52391604b0ce40e092b1f58f88966960';
 
   /// Jwenn match pou jodi a ak yon limit
   /// [limit] - kantite match maksimòm pou jwenn (default: 50)

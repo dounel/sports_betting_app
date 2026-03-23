@@ -1,24 +1,14 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "web/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "api/matches.js",
-      "use": "@vercel/node"
+  "public": true,
+  "functions": {
+    "api/matches.js": {
+      "runtime": "nodejs18.x"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/web/$1"
-    }
+  },
+  "rewrites": [
+    { "source": "/api/matches", "destination": "/api/matches.js" },
+    { "source": "/(.*)", "destination": "/web/$1" }
   ],
   "env": {
     "FOOTBALL_API_KEY": "52391604b0ce40e092b1f58f88966960"
